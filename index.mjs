@@ -15,7 +15,7 @@ import { $, echo, question, chalk, cd, fs } from 'zx'
  * Greetings!
  */
 
-echo`👋 Hello! Welcome to create-nurulakbaral-next-app!`
+echo`👋 Hello! Welcome to create-nanext-app!`
 
 /**
  * Utils!
