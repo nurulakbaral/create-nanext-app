@@ -2,5 +2,6 @@
   "name": "create-nanext-app",
   "version": "0.0.1-beta",
   "main": "index.mjs",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": "./index.mjs"
 }
