@@ -1,7 +1,10 @@
 {
   "name": "create-nanext-app",
-  "version": "0.0.1-beta",
+  "version": "0.0.2-beta",
   "main": "index.mjs",
   "license": "MIT",
-  "bin": "./index.mjs"
+  "bin": "./index.mjs",
+  "devDependencies": {
+    "zx": "^7.0.8"
+  }
 }

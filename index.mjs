@@ -1,4 +1,5 @@
-#!/usr/bin/env zx
+#!/usr/bin/env node
+
 import {
   settingsContent,
   documentContent,
@@ -8,6 +9,7 @@ import {
   prettierignoreContent,
   eslintrcContent,
 } from './contents.mjs'
+import { $, echo, question, chalk, cd, fs } from 'zx'
 
 /**
  * Greetings!
