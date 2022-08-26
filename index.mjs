@@ -58,9 +58,9 @@ let isTypeScript = useTypeScript(defaultTypeScript)
 
 try {
   if (pkgManager === 'npm') {
-    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--ts ' : ''}--use-npm`
+    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--ts' : ''} --use-npm`
   } else if (pkgManager === 'yarn') {
-    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--typescript ' : ''}--yarn`
+    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--typescript' : ''} --yarn`
   } else {
     throw new Error('❌ Error: Please choose package manager name correctly!')
   }
