@@ -53,3 +53,29 @@ build`
 
 export const readmeContent = `# Installation
 # Contributing`
+
+// next.config.js for Next.js v12.2.5
+
+// docs: https://github.com/vercel/next.js/blob/canary/packages/create-next-app/templates/typescript/next.config.js
+export const nextConfigTSContent = `/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  eslint: { 
+    dirs: ["pages", "src"]
+  }
+}
+
+module.exports = nextConfig`
+
+// docs: https://github.com/vercel/next.js/blob/canary/packages/create-next-app/templates/default/next.config.js
+export const nextConfigJSContent = `/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  eslint: { 
+    dirs: ["pages", "src"]
+  }
+}
+
+module.exports = nextConfig`
