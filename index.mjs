@@ -32,7 +32,7 @@ async function mergeRootJsonObj(filePath, rootName, obj, isOverride = false) {
   let objFile = await fs.readJson(filePath)
   let objContent = isOverride ? { ...obj } : { ...objFile[rootName], ...obj }
   let objMerged = { ...objFile, [rootName]: { ...objContent } }
-  let objString = JSON.stringify(objMerged)
+  let objString = JSON.stringify(objMerged, null, 2)
   return await $`echo ${objString} > ${filePath}`
 }
 
