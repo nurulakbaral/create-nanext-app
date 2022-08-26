@@ -11,11 +11,17 @@ import {
   nextConfigJSContent,
   nextConfigTSContent,
 } from './contents.mjs'
-import { $, echo, question, chalk, cd, fs } from 'zx'
+import { $, echo, question, chalk, cd, fs, os } from 'zx'
 
 /**
  * Greetings!
  */
+
+let isWin32 = os.platform() === 'win32'
+if (isWin32) {
+  echo(chalk.red('Sorry, this script is not supported on Windows!'))
+  await $`exit 1`
+}
 
 echo`\n👋 Hello! Welcome to create-nanext-app!`
 
@@ -41,8 +47,8 @@ async function mergeRootJsonObj(filePath, rootName, obj, isOverride = false) {
  */
 
 let projectName = await question('❔ What is your project named? ')
-let pkgManager = await question('📦 Choose your package manager (Enter: npm/yarn/pnpm): ', {
-  choices: ['npm', 'yarn', 'pnpm'],
+let pkgManager = await question('📦 Choose your package manager (Enter: npm/yarn): ', {
+  choices: ['npm', 'yarn'],
 })
 let withTypeScript = await question('🐳 With TypeScript? (Enter: y/n): ', {
   choices: ['y', 'yes', 'n', 'no'],
@@ -52,11 +58,9 @@ let isTypeScript = useTypeScript(defaultTypeScript)
 
 try {
   if (pkgManager === 'npm') {
-    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--ts' : ''}`
+    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--ts' : ''} --use-npm`
   } else if (pkgManager === 'yarn') {
-    await $`yarn create next-app ${projectName} ${isTypeScript ? '--typescript' : ''}`
-  } else if (pkgManager === 'pnpm') {
-    await $`pnpm create next-app ${projectName} ${projectName} ${isTypeScript ? '--ts' : ''}`
+    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--typescript' : ''} --yarn`
   } else {
     throw new Error('❌ Error: Please choose package manager name correctly!')
   }
