@@ -17,7 +17,7 @@ import { $, echo, question, chalk, cd, fs } from 'zx'
  * Greetings!
  */
 
-echo`👋 Hello! Welcome to create-nanext-app!`
+echo`\n👋 Hello! Welcome to create-nanext-app!`
 
 /**
  * Utils!
@@ -158,10 +158,21 @@ await $`echo ${readmeContent} > ./README.md`
 
 // husky
 await $`npx mrm@2 lint-staged`
-let packageExtends = {
+let lintStage = {
   '*.{js,jsx,ts,tsx}': ['eslint --cache --fix', 'prettier --write'],
 }
-await mergeRootJsonObj('./package.json', 'lint-staged', packageExtends, true)
+let scriptsFormatExtends = {
+  format: 'prettier --write "{pages,src,archives}/**/*.{js,jsx,ts,tsx}"',
+}
+await mergeRootJsonObj('./package.json', 'lint-staged', lintStage, true)
+await mergeRootJsonObj('./package.json', 'scripts', scriptsFormatExtends)
+
+/**
+ * Git Commit!
+ */
+
+await $`git add .`
+await $`git commit -m "chore: init setup"`
 
 /**
  * Success!
