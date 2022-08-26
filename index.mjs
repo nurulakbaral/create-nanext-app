@@ -58,9 +58,9 @@ let isTypeScript = useTypeScript(defaultTypeScript)
 
 try {
   if (pkgManager === 'npm') {
-    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--ts' : ''} --use-npm`
+    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--ts ' : ''}--use-npm`
   } else if (pkgManager === 'yarn') {
-    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--typescript' : ''} --yarn`
+    await $`npx create-next-app@latest ${projectName} ${isTypeScript ? '--typescript ' : ''}--yarn`
   } else {
     throw new Error('❌ Error: Please choose package manager name correctly!')
   }
@@ -130,8 +130,10 @@ await $`mkdir ./src/services`
 await $`touch ./src/services/index.${theJs}`
 await $`echo "export {}" > ./src/services/index.${theJs}`
 
-await $`touch ./src/types.${theJs}`
-await $`echo "export {}" > ./src/types.${theJs}`
+if (isTypeScript) {
+  await $`touch ./src/types.ts`
+  await $`echo "export {}" > ./src/types.ts`
+}
 
 // styles
 await $`sudo rm -rf styles`
