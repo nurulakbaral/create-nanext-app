@@ -1,10 +1,24 @@
 {
   "name": "create-nanext-app",
-  "version": "0.0.5-beta",
+  "author": "nurulakbaral@gmail.com",
+  "version": "0.0.6-beta",
   "main": "index.mjs",
   "license": "MIT",
   "bin": "./index.mjs",
-  "devDependencies": {
+  "dependencies": {
     "zx": "^7.0.8"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nurulakbaral/create-nanext-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nurulakbaral/create-nanext-app/issues"
+  },
+  "keywords": [
+    "next.js",
+    "react",
+    "template",
+    "boirplate"
+  ]
 }
