@@ -12,17 +12,13 @@ import {
   nextConfigTSContent,
 } from './contents.mjs'
 import { $, echo, question, chalk, cd, fs, os } from 'zx'
+import { createFileSync, mergeRootJsonSync } from './win32/index.mjs'
 
 /**
  * Greetings!
  */
 
-let isWin32 = os.platform() === 'win32'
-if (isWin32) {
-  echo(chalk.red('Sorry, this script is not supported on Windows!'))
-  await $`exit 1`
-}
-
+const isWin32 = os.platform() === 'win32'
 echo`\n👋 Hello! Welcome to create-nanext-app!`
 
 /**
@@ -55,6 +51,8 @@ let withTypeScript = await question('🐳 With TypeScript? (Enter: y/n): ', {
 })
 let defaultTypeScript = [...yes, ...no].includes(withTypeScript.toLowerCase()) ? withTypeScript : 'y'
 let isTypeScript = useTypeScript(defaultTypeScript)
+let theJsx = isTypeScript ? 'tsx' : 'js'
+let theJs = isTypeScript ? 'ts' : 'js'
 
 try {
   if (pkgManager === 'npm') {
@@ -84,83 +82,180 @@ if (isTypeScript) {
       '~/*': ['./*'],
     },
   }
-  await mergeRootJsonObj('./tsconfig.json', 'compilerOptions', tsconfigExtends)
+  if (!isWin32) {
+    await mergeRootJsonObj('./tsconfig.json', 'compilerOptions', tsconfigExtends)
+  } else {
+    mergeRootJsonSync({
+      rootJsonPath: './tsconfig.json',
+      rootName: 'compilerOptions',
+      jsonFile: tsconfigExtends,
+    })
+  }
 }
 
 // .vscode
-await $`mkdir ./.vscode`
-await $`touch ./.vscode/settings.json`
-await $`echo ${settingsContent} > ./.vscode/settings.json`
+if (!isWin32) {
+  await $`mkdir ./.vscode`
+  await $`touch ./.vscode/settings.json`
+  await $`echo ${settingsContent} > ./.vscode/settings.json`
+} else {
+  createFileSync({
+    name: '.vscode',
+    filePath: './.vscode/settings.json',
+    fileContent: settingsContent,
+  })
+}
 
 // pages
-let theJsx = isTypeScript ? 'tsx' : 'js'
-let theJs = isTypeScript ? 'ts' : 'js'
-await $`touch ./pages/_document.${theJsx}`
-await $`echo ${documentContent} > ./pages/_document.${theJsx}`
+
+if (!isWin32) {
+  await $`touch ./pages/_document.${theJsx}`
+  await $`echo ${documentContent} > ./pages/_document.${theJsx}`
+} else {
+  createFileSync({
+    name: '_document',
+    filePath: `./pages/_document.${theJsx}`,
+    fileContent: documentContent,
+  })
+}
 
 // archives
-await $`mkdir archives`
-await $`touch ./archives/index.${theJs}`
-await $`echo "export {}" > ./archives/index.${theJs}`
+if (!isWin32) {
+  await $`mkdir archives`
+  await $`touch ./archives/index.${theJs}`
+  await $`echo "export {}" > ./archives/index.${theJs}`
+} else {
+  createFileSync({
+    name: 'archives/index',
+    filePath: `./archives/index.${theJs}`,
+    fileContent: 'export {}',
+  })
+}
 
 // src
-await $`mkdir src`
-
-await $`mkdir ./src/components`
-await $`touch ./src/components/index.${theJs}`
-await $`echo "export {}" > ./src/components/index.${theJs}`
-
-await $`mkdir ./src/ui`
-await $`touch ./src/ui/index.${theJs}`
-await $`echo "export {}" > ./src/ui/index.${theJs}`
-
-await $`mkdir ./src/utils`
-await $`touch ./src/utils/index.${theJs}`
-await $`echo "export {}" > ./src/utils/index.${theJs}`
-
-await $`mkdir ./src/libs`
-await $`touch ./src/libs/index.${theJs}`
-await $`echo "export {}" > ./src/libs/index.${theJs}`
-
-await $`mkdir ./src/hooks`
-await $`touch ./src/hooks/index.${theJs}`
-await $`echo "export {}" > ./src/hooks/index.${theJs}`
-
-await $`mkdir ./src/services`
-await $`touch ./src/services/index.${theJs}`
-await $`echo "export {}" > ./src/services/index.${theJs}`
+let folders = ['components', 'ui', 'utils', 'libs', 'hooks', 'services']
+if (!isWin32) {
+  await $`mkdir src`
+  for (let folder of folders) {
+    await $`mkdir ./src/${folder}`
+    await $`touch ./src/${folder}/index.${theJs}`
+    await $`echo "export {}" > ./src/${folder}/index.${theJs}`
+  }
+} else {
+  for (let folder of folders) {
+    createFileSync({
+      name: `src/${folder}`,
+      filePath: `./src/${folder}/index.${theJs}`,
+      fileContent: 'export {}',
+    })
+  }
+}
 
 if (isTypeScript) {
-  await $`touch ./src/types.ts`
-  await $`echo "export {}" > ./src/types.ts`
+  if (!isWin32) {
+    await $`touch ./src/types.ts`
+    await $`echo "export {}" > ./src/types.ts`
+  } else {
+    createFileSync({
+      name: 'src/types',
+      filePath: './src/types.ts',
+      fileContent: 'export {}',
+    })
+  }
 }
 
 // styles
-await $`sudo rm -rf styles`
-await $`mkdir styles`
-await $`touch ./styles/theme.${theJs}`
-await $`echo "export {}" > ./styles/theme.${theJs}`
-await $`touch ./styles/globals.css`
+fs.removeSync('./styles')
+if (!isWin32) {
+  await $`mkdir styles`
+  await $`touch ./styles/theme.${theJs}`
+  await $`echo "export {}" > ./styles/theme.${theJs}`
+  await $`touch ./styles/globals.css`
+} else {
+  createFileSync({
+    name: 'styles/theme',
+    filePath: `./styles/theme.${theJs}`,
+    fileContent: 'export {}',
+  })
+  createFileSync({
+    name: 'styles/globals',
+    filePath: `./styles/globals.css`,
+    fileContent: '',
+  })
+}
 
 // prettier and eslint
 await $`yarn add -D prettier eslint-config-prettier`
-await $`echo ${eslintrcContent} > ./.eslintrc.json`
-await $`touch .eslintignore`
-await $`echo ${eslintignoreContent} > ./.eslintignore`
-await $`touch .prettierrc.json`
-await $`echo ${prettierContent} > ./.prettierrc.json`
-await $`touch .prettierignore`
-await $`echo ${prettierignoreContent} > ./.prettierignore`
-await $`echo ${isTypeScript ? nextConfigTSContent : nextConfigJSContent} > ./next.config.js`
+if (!isWin32) {
+  await $`echo ${eslintrcContent} > ./.eslintrc.json`
+  await $`touch .eslintignore`
+  await $`echo ${eslintignoreContent} > ./.eslintignore`
+
+  await $`touch .prettierrc.json`
+  await $`echo ${prettierContent} > ./.prettierrc.json`
+  await $`touch .prettierignore`
+  await $`echo ${prettierignoreContent} > ./.prettierignore`
+
+  await $`echo ${isTypeScript ? nextConfigTSContent : nextConfigJSContent} > ./next.config.js`
+} else {
+  createFileSync({
+    name: '.eslintrc',
+    filePath: './.eslintrc.json',
+    fileContent: eslintrcContent,
+  })
+  createFileSync({
+    name: '.eslintignore',
+    filePath: './.eslintignore',
+    fileContent: eslintignoreContent,
+  })
+  createFileSync({
+    name: '.prettierrc',
+    filePath: './.prettierrc.json',
+    fileContent: prettierContent,
+  })
+  createFileSync({
+    name: '.prettierignore',
+    filePath: './.prettierignore',
+    fileContent: prettierignoreContent,
+  })
+  createFileSync({
+    name: 'next.config',
+    filePath: './next.config.js',
+    fileContent: isTypeScript ? nextConfigTSContent : nextConfigJSContent,
+  })
+}
 
 // env
-await $`touch .env`
-await $`touch .env.local`
-await $`touch .env.example`
-
+let envs = ['.env', '.env.local', '.env.example']
+if (!isWin32) {
+  for (let env of envs) {
+    await $`touch ${env}`
+  }
+} else {
+  for (let env of envs) {
+    createFileSync({
+      name: env,
+      filePath: `./${env}`,
+      fileContent: '',
+    })
+  }
+}
 // md
-await $`touch NOTES.md`
-await $`echo ${readmeContent} > ./README.md`
+if (!isWin32) {
+  await $`touch NOTES.md`
+  await $`echo ${readmeContent} > ./README.md`
+} else {
+  createFileSync({
+    name: 'NOTES',
+    filePath: './NOTES.md',
+    fileContent: '',
+  })
+  createFileSync({
+    name: 'README',
+    filePath: './README.md',
+    fileContent: readmeContent,
+  })
+}
 
 // husky
 await $`npx mrm@2 lint-staged`
@@ -170,8 +265,22 @@ let lintStage = {
 let scriptsFormatExtends = {
   format: 'prettier --write "{pages,src,archives}/**/*.{js,jsx,ts,tsx}"',
 }
-await mergeRootJsonObj('./package.json', 'lint-staged', lintStage, true)
-await mergeRootJsonObj('./package.json', 'scripts', scriptsFormatExtends)
+if (!isWin32) {
+  await mergeRootJsonObj('./package.json', 'lint-staged', lintStage, true)
+  await mergeRootJsonObj('./package.json', 'scripts', scriptsFormatExtends)
+} else {
+  mergeRootJsonSync({
+    rootJsonPath: './package.json',
+    rootName: 'lint-staged',
+    jsonFile: lintStage,
+    isOverride: true,
+  })
+  mergeRootJsonSync({
+    rootJsonPath: './package.json',
+    rootName: 'scripts',
+    jsonFile: scriptsFormatExtends,
+  })
+}
 
 /**
  * Git Commit!
