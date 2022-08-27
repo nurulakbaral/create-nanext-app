@@ -5,7 +5,7 @@
 To get started, use the following command:
 
 ```
-npx create-nanext-app
+npx create-nanext-app@latest
 
 # or
 
