@@ -1,5 +1,9 @@
 import { fs, echo, chalk } from 'zx'
 
+/**
+ * `createDirSync` can overried the existing directory and files.
+ */
+
 export function createDirSync({ folderPath, fileName, fileContent }) {
   try {
     fs.ensureDirSync(folderPath)
