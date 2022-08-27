@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
 
-import { $, echo, chalk, question } from 'zx'
+import { $, echo, chalk, question, fs } from 'zx'
 import { createFileSync } from './win32/index.mjs'
 import { documentContent } from './contents.mjs'
 
@@ -49,6 +49,11 @@ import { documentContent } from './contents.mjs'
 // // Create  file and content
 // createFileSync({
 //   name: '_document',
-//   filePath: '/_document.tsx',
+//   filePath: './_document.tsx',
 //   fileContent: documentContent,
 // })
+
+// await question('Delete created file and folder? ')
+
+// fs.removeSync('./repl-dir/_document.tsx')
+// fs.removeSync('./_document.tsx')
