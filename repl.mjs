@@ -1,7 +1,7 @@
 #!/usr/bin/env zx
 
 import { $, echo, chalk, question, fs } from 'zx'
-import { createFileSync } from './win32/index.mjs'
+import { createFileSync, mergeRootJsonSync } from './win32/index.mjs'
 import { documentContent } from './contents.mjs'
 
 /**
@@ -57,3 +57,9 @@ import { documentContent } from './contents.mjs'
 
 // fs.removeSync('./repl-dir/_document.tsx')
 // fs.removeSync('./_document.tsx')
+
+mergeRootJsonSync({
+  rootJsonPath: './repl-dir/root.json',
+  fileJsonPath: './repl-dir/new.json',
+  rootName: 'hello',
+})
