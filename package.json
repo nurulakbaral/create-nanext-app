@@ -1,7 +1,7 @@
 {
   "name": "create-nanext-app",
   "author": "nurulakbaral@gmail.com",
-  "version": "0.1.0-beta",
+  "version": "0.1.1-beta",
   "main": "index.mjs",
   "license": "MIT",
   "bin": "./index.mjs",

@@ -2,6 +2,7 @@
 
 import {
   settingsContent,
+  indexDocumentContent,
   documentContent,
   readmeContent,
   prettierContent,
@@ -109,9 +110,15 @@ if (!isWin32) {
 // pages
 
 if (!isWin32) {
+  await $`echo ${indexDocumentContent} > ./pages/index.${theJsx}`
   await $`touch ./pages/_document.${theJsx}`
   await $`echo ${documentContent} > ./pages/_document.${theJsx}`
 } else {
+  createFileSync({
+    name: 'index',
+    filePath: `./pages/index.${theJsx}`,
+    fileContent: indexDocumentContent,
+  })
   createFileSync({
     name: '_document',
     filePath: `./pages/_document.${theJsx}`,
