@@ -1,7 +1,7 @@
 #!/usr/bin/env zx
 
 import { $, echo, chalk, question } from 'zx'
-import { createDirSync } from './win32/index.mjs'
+import { createFileSync } from './win32/index.mjs'
 import { documentContent } from './contents.mjs'
 
 /**
@@ -39,10 +39,16 @@ import { documentContent } from './contents.mjs'
  * win32
  */
 
-await $`echo First`
-createDirSync({
-  folderPath: './repl-dir',
-  fileName: '_document.tsx',
-  fileContent: documentContent,
-})
-await $`echo Second`
+// // Create folder, file and content
+// createFileSync({
+//   name: '_document',
+//   filePath: './repl-dir/_document.tsx',
+//   fileContent: documentContent,
+// })
+
+// // Create  file and content
+// createFileSync({
+//   name: '_document',
+//   filePath: '/_document.tsx',
+//   fileContent: documentContent,
+// })

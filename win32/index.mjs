@@ -1,1 +1,1 @@
-export * from './createDirSync.mjs'
+export * from './createFileSync.mjs'
