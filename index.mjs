@@ -283,8 +283,12 @@ if (!isWin32) {
 }
 
 /**
- * Git Commit!
+ * Git commit and removed unnecessary files!
  */
+
+if (isWin32) {
+  fs.removeSync('./6')
+}
 
 await $`git add .`
 await $`git commit -m "chore: init setup"`
