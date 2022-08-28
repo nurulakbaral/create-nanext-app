@@ -108,7 +108,6 @@ if (!isWin32) {
 }
 
 // pages
-
 if (!isWin32) {
   await $`echo ${indexDocumentContent} > ./pages/index.${theJsx}`
   await $`touch ./pages/_document.${theJsx}`
@@ -192,7 +191,34 @@ if (!isWin32) {
 }
 
 // prettier and eslint
-await $`yarn add -D prettier eslint-config-prettier`
+let configFoders = [
+  {
+    file: '.eslintrc.json',
+    content: eslintrcContent,
+  },
+  {
+    file: '.eslintignore',
+    content: eslintignoreContent,
+  },
+  {
+    file: '.prettierrc.json',
+    content: prettierContent,
+  },
+  {
+    file: '.prettierignore',
+    content: prettierignoreContent,
+  },
+  {
+    file: 'next.config.js',
+    content: isTypeScript ? nextConfigTSContent : nextConfigJSContent,
+  },
+]
+
+if (pkgManager === 'yarn') {
+  await $`yarn add -D prettier eslint-config-prettier`
+} else {
+  await $`npm install -D prettier eslint-config-prettier`
+}
 if (!isWin32) {
   await $`echo ${eslintrcContent} > ./.eslintrc.json`
   await $`touch .eslintignore`
@@ -205,31 +231,13 @@ if (!isWin32) {
 
   await $`echo ${isTypeScript ? nextConfigTSContent : nextConfigJSContent} > ./next.config.js`
 } else {
-  createFileSync({
-    name: '.eslintrc',
-    filePath: './.eslintrc.json',
-    fileContent: eslintrcContent,
-  })
-  createFileSync({
-    name: '.eslintignore',
-    filePath: './.eslintignore',
-    fileContent: eslintignoreContent,
-  })
-  createFileSync({
-    name: '.prettierrc',
-    filePath: './.prettierrc.json',
-    fileContent: prettierContent,
-  })
-  createFileSync({
-    name: '.prettierignore',
-    filePath: './.prettierignore',
-    fileContent: prettierignoreContent,
-  })
-  createFileSync({
-    name: 'next.config',
-    filePath: './next.config.js',
-    fileContent: isTypeScript ? nextConfigTSContent : nextConfigJSContent,
-  })
+  for (let { file, content } of configFoders) {
+    createFileSync({
+      name: file,
+      filePath: `./${file}`,
+      fileContent: content,
+    })
+  }
 }
 
 // env
@@ -265,7 +273,7 @@ if (!isWin32) {
 }
 
 // husky
-await $`npx mrm@2 lint-staged`
+await $`npx mrm@2 lint-staged ${pkgManager === 'npm' ? '--use-npm' : '--yarn'}`
 let lintStage = {
   '*.{js,jsx,ts,tsx}': ['eslint --cache --fix', 'prettier --write'],
 }

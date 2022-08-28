@@ -53,15 +53,6 @@ export default function Home() {
         <a href='https://github.com/nurulakbaral' target='_blank' rel='noopener noreferrer'>
           Created by nurulakbaral
         </a>
-        <div
-          style={{
-            marginTop: '12px',
-          }}
-        >
-          <span>
-            <Image src='/vercel.svg' alt='Vercel Logo' width={72} height={16} />
-          </span>
-        </div>
       </footer>
     </div>
   )
