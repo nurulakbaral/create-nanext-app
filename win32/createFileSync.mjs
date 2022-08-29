@@ -24,7 +24,7 @@ import { fs, echo, chalk } from 'zx'
 // Create file and content
 // createFileSync({
 //   name: '_document',
-//   filePath: '/_document.tsx',
+//   filePath: './_document.tsx',
 //   fileContent: `<h1>Hello World</h1>`,
 // })
 
