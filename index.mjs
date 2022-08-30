@@ -307,6 +307,7 @@ if (isWin32) {
 
 await $`git add .`
 await $`git commit -m "chore: init setup"`
+fs.removeSync('./.eslintcache')
 
 /**
  * Success!
